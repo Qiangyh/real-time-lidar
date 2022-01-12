@@ -1,8 +1,7 @@
 #pragma once
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "Patate/grenaille.h"
-
+#include <Ponca/Fitting>
 
 #define MAX_POINTS_PER_PIX 3
 #define MEAN_POINTS_PER_PIX 3
