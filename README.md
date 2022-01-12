@@ -8,16 +8,16 @@ All the algorithms in this package can achieve real-time performance.
 
 ### Global (spatial regularisation)
 
-- RT3D [1]
-- Color RT3D [2]
-- Sketched RT3D [4]
+- [RT3D](#rt3d)
+- [Color RT3D](#color-rt3d)
+- [Sketched RT3D](#sketched-rt3d)
 
 ### Pixelwise (no regularisation)
 
 - Log-matched filtering
 - Matched filtering
-- Half-sample mode [2]
-- Sketched maximum likelihood [3]
+- [Half-sample mode](#color-rt3d)
+- [Sketched maximum likelihood](#sketched-rt3d)
 
 ## Dependencies
 
@@ -38,9 +38,10 @@ cmake ../ -DCMAKE_BUILD_TYPE=RELEASE
 make
 ```
 
-## Citation
+## Papers
 
-1. Real-time 3D reconstruction from single-photon lidar data using plug-and-play point cloud denoisers 
+### RT3D
+Full paper: [https://www.nature.com/articles/s41467-019-12943-7](https://www.nature.com/articles/s41467-019-12943-7)
 
 ```
     @article{tachella2019rt3d,
@@ -51,14 +52,13 @@ make
     journal={Nature communications},
     volume={10},
     number={1},
-    pages={1--6},
-    year={2019},
-    publisher={Nature Publishing Group}
+    year={2019}
     }
 ```
 
-2. Real-Time 3D Color Imaging with Single-Photon Lidar Data
+### Color RT3D 
 
+Full paper: [https://ieeexplore.ieee.org/abstract/document/9022496](https://ieeexplore.ieee.org/abstract/document/9022496)
 ```
 @inproceedings{tachella2019crt3d,
 author={Tachella, J. and Altmann, Y. 
@@ -73,7 +73,8 @@ pages={206-210},
 doi={10.1109/CAMSAP45676.2019.9022496}} 
 ```
 
-3. A Sketching Framework for Reduced Data Transfer in Photon Counting Lidar
+### Sketched RT3D
+Full paper: [https://ieeexplore.ieee.org/document/9616208](https://ieeexplore.ieee.org/document/9616208)
 
 ```
 @article{sheehan2021sketchedlidar,
