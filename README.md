@@ -4,7 +4,7 @@ This package containing C++/CUDA algorithms for real-time reconstruction of sing
 
 ## Algorithms
 
-All the algorithms in this package can achieve real-time performance.
+All the algorithms in this package can achieve real-time performance (at least 10 frames per second on a GPU). This library contains standard algorithms such as matched-filtering and more complex algorithms such as RT3D.
 
 ### Global (spatial regularisation)
 
@@ -19,12 +19,19 @@ All the algorithms in this package can achieve real-time performance.
 - [Half-sample mode](#color-rt3d)
 - [Sketched maximum likelihood](#sketched-rt3d)
 
+## Requirements
+The package is written in cpp/cuda, so you will need an NVIDIA graphics card.
+
+## Easy evaluation
+Do you want to evaluate the algorithms but don't bother compiling this code? You can find a precompiled executable in [this other repository](https://gitlab.com/Tachella/real-time-single-photon-lidar).
+
 ## Dependencies
 
 - Point Cloud Library 1.8.1 (visualisation/point primitives)
 - Eigen3 (computing primitives)
 - Ponca (point cloud fitting)
 - FreeImage (visualization)
+- CUDA (GPU programming)
 
 ## Compilation
 
