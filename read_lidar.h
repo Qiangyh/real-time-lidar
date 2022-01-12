@@ -6,7 +6,7 @@
 #include <vector>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "Patate/grenaille.h"
+#include <Ponca/Fitting>
 
 typedef enum { SPARSE, DENSE, SKETCHED } type;
 
