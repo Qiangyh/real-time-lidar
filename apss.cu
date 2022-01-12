@@ -5,7 +5,7 @@
 #include "read_lidar.h"
 #include "Eigen\Core"
 #include "Point.h"
-#include "<Ponca/Fitting>"
+#include <Ponca/Fitting>
 
 
 #define MIN_DIST_APSS_PROJECTION 0.1
@@ -41,15 +41,15 @@ struct gpwnr {
 };
 
 // define weighting kernel
-typedef Grenaille::DistWeightFunc<BasicPoint, Grenaille::SmoothWeightKernel<MyPoint::Scalar>> WeightFunc;
-//typedef Grenaille::DistWeightFunc<MyPoint, Grenaille::ExpWeightKernel<MyPoint::Scalar>> WeightFunc;
+typedef Ponca::DistWeightFunc<BasicPoint, Ponca::SmoothWeightKernel<MyPoint::Scalar>> WeightFunc;
+//typedef Ponca::DistWeightFunc<MyPoint, Ponca::ExpWeightKernel<MyPoint::Scalar>> WeightFunc;
 
 // define algebraic sphere fit with normals
-typedef Grenaille::Basket<BasicPoint,WeightFunc, Grenaille::OrientedSphereFit> FitNormals;
+typedef Ponca::Basket<BasicPoint,WeightFunc, Ponca::OrientedSphereFit> FitNormals;
 
 // define algebraic sphere fit without normals
-typedef Grenaille::Basket<BasicPoint, WeightFunc, Grenaille::SphereFit> FitSphereWithoutNormals;
-typedef Grenaille::Basket<BasicPoint, WeightFunc, Grenaille::CovariancePlaneFit> FitPlaneWithoutNormals;
+typedef Ponca::Basket<BasicPoint, WeightFunc, Ponca::SphereFit> FitSphereWithoutNormals;
+typedef Ponca::Basket<BasicPoint, WeightFunc, Ponca::CovariancePlaneFit> FitPlaneWithoutNormals;
 
 
 /* one thread per pixel or one thread per point*/
@@ -353,10 +353,10 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 					}
 				}
 
-				Grenaille::FIT_RESULT fresult = Fit.finalize();
+				Ponca::FIT_RESULT fresult = Fit.finalize();
 
 
-				if (fresult != Grenaille::UNDEFINED) {
+				if (fresult != Ponca::UNDEFINED) {
 					float delta_z;
 
 					// project into the same pixel position
@@ -664,10 +664,10 @@ __global__ void APSS_with_normals_resample_bilateral(float *in_points, float * i
 					}
 				}
 
-				Grenaille::FIT_RESULT fresult = Fit.finalize();
+				Ponca::FIT_RESULT fresult = Fit.finalize();
 
 
-				if (fresult != Grenaille::UNDEFINED) {
+				if (fresult != Ponca::UNDEFINED) {
 					float delta_z;
 
 					// project into the same pixel position
@@ -1090,9 +1090,9 @@ __global__ void SPSS_without_normals_resample(const float *in_points,const float
 				}
 			}
 
-			Grenaille::FIT_RESULT fresult = Fit.finalize();
+			Ponca::FIT_RESULT fresult = Fit.finalize();
 
-			if (fresult == Grenaille::STABLE) {
+			if (fresult == Ponca::STABLE) {
 
 				BasicPoint::VectorType normal = Fit.normal();
 				float c = Fit.m_p(3);
