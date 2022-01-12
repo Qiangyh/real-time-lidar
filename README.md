@@ -5,7 +5,3 @@ Package containing C++/CUDA algorithms for real-time reconstruction of single-ph
 ## Getting started
 
 
-## Authors
-Julian Tachella, Nicolas Mellado, Yoann Altmann
-
-
