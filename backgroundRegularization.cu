@@ -5,7 +5,7 @@
 */
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "backgroundRegularization.cuh"
+#include "backgroundRegularization.h"
 #include "Point.h"
 #include "GPU_macros.h"
 #include <stdio.h>

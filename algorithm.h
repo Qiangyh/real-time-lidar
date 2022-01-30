@@ -3,7 +3,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include "read_lidar.h"
-#include "backgroundRegularization.cuh"
+#include "backgroundRegularization.h"
 
 class LidarReconstruction {
 

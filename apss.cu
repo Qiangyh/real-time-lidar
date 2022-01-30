@@ -1095,7 +1095,8 @@ __global__ void SPSS_without_normals_resample(const float *in_points,const float
 			if (fresult == Ponca::STABLE) {
 
 				BasicPoint::VectorType normal = Fit.normal();
-				float c = Fit.m_p(3);
+				//float c = Fit.m_p(3);
+				float c = Fit.basisCenter()[3];
 
 				// project into pixel
 				float delta_z =  -p.pos()(2) - (p.pos()(0)*normal(0) + p.pos()(1)*normal(1) + c) / normal(2);

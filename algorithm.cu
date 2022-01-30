@@ -3,10 +3,10 @@
 #include <iostream>
 #include "GPU_macros.h"
 #include "Point.h"
-#include "logmatch.cuh"
-#include "apss.cuh"
+#include "logmatch.h"
+#include "apss.h"
 #include "misc.h"
-#include "gradient.cuh"
+#include "gradient.h"
 #include <chrono>  // for high_resolution_clock
 #include <boost/filesystem.hpp>
 

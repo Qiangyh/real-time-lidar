@@ -24,7 +24,7 @@ struct photon{
 };
 
 
-MULTIARCH inline  photon getBinCounts(const  int x, const  int  y, const  int k, const  int * bins_counts, const  int start_idx,  const  int Nrow) {
+PONCA_MULTIARCH inline  photon getBinCounts(const  int x, const  int  y, const  int k, const  int * bins_counts, const  int start_idx,  const  int Nrow) {
 
 	photon phot;
 	phot.bin = bins_counts[2*(start_idx + k) + 0];

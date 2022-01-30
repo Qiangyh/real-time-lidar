@@ -17,14 +17,14 @@ public:
 	typedef Eigen::Matrix<Scalar, Dim, Dim> MatrixType;
 
 	// constructor, by default everything to zero
-	MULTIARCH inline BasicPoint(const VectorType &pos = VectorType::Zero(),
+	PONCA_MULTIARCH inline BasicPoint(const VectorType &pos = VectorType::Zero(),
 		const VectorType &normal = VectorType::Zero()) : _pos(pos), _normal(normal) {};
 
-	MULTIARCH inline const VectorType & pos() const { return _pos; };
-	MULTIARCH inline const VectorType & normal() const { return _normal; };
+	PONCA_MULTIARCH inline const VectorType & pos() const { return _pos; };
+	PONCA_MULTIARCH inline const VectorType & normal() const { return _normal; };
 
-	MULTIARCH inline VectorType & pos() { return _pos; };
-	MULTIARCH inline VectorType & normal() { return _normal; };
+	PONCA_MULTIARCH inline VectorType & pos() { return _pos; };
+	PONCA_MULTIARCH inline VectorType & normal() { return _normal; };
 
 protected:
 	VectorType _pos, _normal;
@@ -38,12 +38,12 @@ public:
 
 	typedef Eigen::Matrix<Scalar, MAX_WAVELENGTHS, 1> ReflectivityType;
 
-	MULTIARCH inline MyPoint(const VectorType &pos = VectorType::Zero(),
+	PONCA_MULTIARCH inline MyPoint(const VectorType &pos = VectorType::Zero(),
 		const ReflectivityType &r = ReflectivityType::Zero(), const VectorType &normal = VectorType::Zero()) : BasicPoint(pos, normal), _r(r) {};
 
-	MULTIARCH inline ReflectivityType & r() { return _r; };
+	PONCA_MULTIARCH inline ReflectivityType & r() { return _r; };
 
-	MULTIARCH inline const ReflectivityType & r() const { return _r; };
+	PONCA_MULTIARCH inline const ReflectivityType & r() const { return _r; };
 
 private:
 	ReflectivityType _r;
@@ -53,45 +53,45 @@ private:
 
 
 /* GPU INDEXING FUNCTIONS */
-MULTIARCH inline int get_pixel_idx(const int x, const int y, const int Nrow, const int Ncol) {
+PONCA_MULTIARCH inline int get_pixel_idx(const int x, const int y, const int Nrow, const int Ncol) {
 	return (x + y * Nrow);
 }
 
-MULTIARCH inline int get_y_idx(const int lin_idx, const int Nrow, const int Ncol) {
+PONCA_MULTIARCH inline int get_y_idx(const int lin_idx, const int Nrow, const int Ncol) {
 	return  lin_idx / Nrow;
 }
 
-MULTIARCH inline int get_x_idx(const int lin_idx, const int y, const int Nrow, const int Ncol) {
+PONCA_MULTIARCH inline int get_x_idx(const int lin_idx, const int y, const int Nrow, const int Ncol) {
 	return lin_idx - y*Nrow;
 }
 
 
-MULTIARCH inline int get_point_idx(const int x, const int y, const int n, const int Nrow, const int Ncol) {
+PONCA_MULTIARCH inline int get_point_idx(const int x, const int y, const int n, const int Nrow, const int Ncol) {
 	return get_pixel_idx(x, y, Nrow, Ncol) + n*Nrow*Ncol;
 }
 
-MULTIARCH inline int get_normal_idx(const int x, const int y, const int n, const int Nrow, const int Ncol, const int i) {
+PONCA_MULTIARCH inline int get_normal_idx(const int x, const int y, const int n, const int Nrow, const int Ncol, const int i) {
 	return 3*get_point_idx(x,y,n,Nrow,Ncol)+i;
 }
 
-MULTIARCH inline int get_ref_idx(const int x, const int y, const int n, const int Nrow, const int Ncol) {
+PONCA_MULTIARCH inline int get_ref_idx(const int x, const int y, const int n, const int Nrow, const int Ncol) {
 	return get_point_idx(x, y, n, Nrow, Ncol);
 }
 
-MULTIARCH inline int get_ref_idx(const int x, const int y, const int n, const int Nrow, const int Ncol, const int L, const int wth) {
+PONCA_MULTIARCH inline int get_ref_idx(const int x, const int y, const int n, const int Nrow, const int Ncol, const int L, const int wth) {
 	return L*get_point_idx(x, y, n, Nrow, Ncol) + wth;
 }
 
-MULTIARCH inline int get_bkg_idx(const int x, const int y, const int Nrow, const int Ncol) {
+PONCA_MULTIARCH inline int get_bkg_idx(const int x, const int y, const int Nrow, const int Ncol) {
 	return get_pixel_idx(x, y, Nrow, Ncol);
 }
 
-MULTIARCH inline int get_bkg_idx(const int x, const int y, const int Nrow, const int Ncol, const int wth) {
+PONCA_MULTIARCH inline int get_bkg_idx(const int x, const int y, const int Nrow, const int Ncol, const int wth) {
 	return  (get_bkg_idx(x, y, Nrow, Ncol) + wth *Nrow*Ncol); // WARNING: changing this may affect the behaviour of cuFFT
 }
 
 
-MULTIARCH inline void WritePoint(const  int x, const  int y, const  float z, const float r, int * points_per_pix, const  int Nrow, const  int Ncol, float * points, float * reflect) {
+PONCA_MULTIARCH inline void WritePoint(const  int x, const  int y, const  float z, const float r, int * points_per_pix, const  int Nrow, const  int Ncol, float * points, float * reflect) {
 
 	// make memory reads as coalesced as possible
 	int index = points_per_pix[x + y * Nrow];
@@ -101,7 +101,7 @@ MULTIARCH inline void WritePoint(const  int x, const  int y, const  float z, con
 }
 
 
-MULTIARCH inline void WritePoint(const  int x, const  int y, const float z, const float r, int index, const  int Nrow, const  int Ncol, float * points, float * reflect) {
+PONCA_MULTIARCH inline void WritePoint(const  int x, const  int y, const float z, const float r, int index, const  int Nrow, const  int Ncol, float * points, float * reflect) {
 
 	// make memory reads as coalesced as possible
 	points[(x + y * Nrow) + (Nrow*Ncol)*index] = float(z);
@@ -110,7 +110,7 @@ MULTIARCH inline void WritePoint(const  int x, const  int y, const float z, cons
 
 
 
-MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * normals,
+PONCA_MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * normals,
 	const float * points, const float * reflect, const float scale_ratio, const int L) {
 
 	// make memory reads as coalesced as possible
@@ -130,7 +130,7 @@ MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, 
 
 
 /*
-MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * points,float * reflect, const float scale_ratio, const int L) {
+PONCA_MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * points,float * reflect, const float scale_ratio, const int L) {
 
 	// make memory reads as coalesced as possible
 	int d = (x + y * Nrow) + (Nrow*Ncol)*idx;
@@ -143,7 +143,7 @@ MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, 
 }
 
 
-MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * normals, const float * points, const float * reflect, const float scale_ratio) {
+PONCA_MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * normals, const float * points, const float * reflect, const float scale_ratio) {
 
 	// make memory reads as coalesced as possible
 	int d = (x + y * Nrow) + (Nrow*Ncol)*idx;
@@ -157,7 +157,7 @@ MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, 
 }
 
 
-MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * normals, const float * points,  const float scale_ratio) {
+PONCA_MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, const float * normals, const float * points,  const float scale_ratio) {
 
 	// make memory reads as coalesced as possible
 	int d = (x + y * Nrow) + (Nrow*Ncol)*idx;
@@ -172,14 +172,14 @@ MULTIARCH inline MyPoint ReadPoint(const  int x, const  int y, const  int  idx, 
 
 */
 
-MULTIARCH inline float ReadPointDepth(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, float * points) {
+PONCA_MULTIARCH inline float ReadPointDepth(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, float * points) {
 
 	// make memory reads as coalesced as possible
 	int d = (x + y * Nrow) + (Nrow*Ncol)*idx;
 	return points[d];
 }
 
-MULTIARCH inline float ReadPointRef(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, float * reflect) {
+PONCA_MULTIARCH inline float ReadPointRef(const  int x, const  int y, const  int  idx, const  int Nrow, const  int Ncol, float * reflect) {
 	// make memory reads as coalesced as possible
 	int d = (x + y * Nrow) + (Nrow*Ncol)*idx;
 	return reflect[d];
