@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/fit_line.dir/fit_line.cpp.o -o fit_line  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 

@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/gls_tau.dir/gls_tau.cpp.o -o gls_tau  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 

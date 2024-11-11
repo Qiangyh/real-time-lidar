@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/plane_primitive.dir/plane_primitive.cpp.o -o plane_primitive  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 
