@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/gls_compare.dir/gls_compare.cpp.o -o gls_compare  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 

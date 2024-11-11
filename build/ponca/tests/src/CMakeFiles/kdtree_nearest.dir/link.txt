@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/kdtree_nearest.dir/kdtree_nearest.cpp.o -o kdtree_nearest  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 

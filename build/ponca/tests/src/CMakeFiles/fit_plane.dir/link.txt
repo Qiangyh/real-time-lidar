@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/fit_plane.dir/fit_plane.cpp.o -o fit_plane  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 

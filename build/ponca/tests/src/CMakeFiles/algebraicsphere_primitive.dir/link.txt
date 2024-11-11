@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/algebraicsphere_primitive.dir/algebraicsphere_primitive.cpp.o -o algebraicsphere_primitive  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 

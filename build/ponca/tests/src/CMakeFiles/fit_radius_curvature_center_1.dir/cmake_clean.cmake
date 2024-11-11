@@ -1,0 +1,11 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/fit_radius_curvature_center_1.dir/fit_radius_curvature_center.cpp.o"
+  "CMakeFiles/fit_radius_curvature_center_1.dir/fit_radius_curvature_center.cpp.o.d"
+  "fit_radius_curvature_center_1"
+  "fit_radius_curvature_center_1.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/fit_radius_curvature_center_1.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

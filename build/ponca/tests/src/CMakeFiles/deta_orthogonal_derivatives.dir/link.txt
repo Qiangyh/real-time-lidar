@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/deta_orthogonal_derivatives.dir/deta_orthogonal_derivatives.cpp.o -o deta_orthogonal_derivatives  /usr/lib/gcc/x86_64-linux-gnu/7/libgomp.so -lpthread 
