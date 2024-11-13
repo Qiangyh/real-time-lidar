@@ -103,7 +103,6 @@ void run_single(void)
 		while (1)
 		{
 			algo.loadParameters(data, false); // !data.SBR_available());
-
 			/************* Show results *************/
 			bool plot = (data.getFrameNumber() == 1); // askYesNo("Do you want to plot results? This will significantly degrade the execution performance");
 			bool binary = true;

@@ -302,9 +302,9 @@ bool LidarReconstruction::loadParameters(LidarData &data, bool manual, int alg) 
 	width_cloud = Ncol * upsampling;
 	sigmar2 = (reg_dep*step_size_reflec*wavelengths*wavelengths*mean_signal*mean_signal*mean_signal) / 10;
 	allocateGPUMemory(data);
+	//根据数据特性和需求，为 GPU 上的 LiDAR 数据结构分配并初始化内存，同时配置 CUDA 网格和线程块
 	// Set Laplacian Filter
 	setBackgroundFilter();
-
 
 	return true;
 };
@@ -643,8 +643,6 @@ void LidarReconstruction::allocateGPUMemory(LidarData &data, bool print_info) {
 	grid_lidar.x = std::ceil(float(Nrow*Ncol) / float(linear_block_size));
 	grid_lidar.y = 1;
 	grid_lidar.z = 1;
-
-
 }
 
 
