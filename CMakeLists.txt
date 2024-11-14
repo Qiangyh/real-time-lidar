@@ -5,7 +5,8 @@ project(real-time-lidar)
 # Enable CUDA language support
 find_package(CUDA 11.6 REQUIRED)
 enable_language(CUDA)
-include_directories(${CUDA_INCLUDE_DIRS})                                        
+include_directories(${CUDA_INCLUDE_DIRS})        
+
 
 # Find and include PCL
 find_package(PCL 1.8.1 REQUIRED)
@@ -42,6 +43,7 @@ target_compile_options(real-time-lidar PRIVATE
 # Add -Xcompiler -fPIC for CUDA code to allow its passing to nvcc
 target_compile_options(real-time-lidar PRIVATE 
     $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler -fPIC>
+    $<$<COMPILE_LANGUAGE:CUDA>:-diag-suppress=20012,20013,20014,20015,177>
 )
 
 
