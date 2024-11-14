@@ -305,7 +305,6 @@ bool LidarReconstruction::loadParameters(LidarData &data, bool manual, int alg) 
 	//根据数据特性和需求，为 GPU 上的 LiDAR 数据结构分配并初始化内存，同时配置 CUDA 网格和线程块
 	// Set Laplacian Filter
 	setBackgroundFilter();
-
 	return true;
 };
 

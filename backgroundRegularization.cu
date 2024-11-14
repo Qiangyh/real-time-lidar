@@ -18,8 +18,25 @@ __constant__ float d_Kernel[KERNEL_W];
 
 void setCudaFFT(int Nrow, int Ncol, cufftHandle *fft, cufftHandle *ifft) {
 
-	cufftPlan2d(fft, Ncol, Nrow, CUFFT_R2C);
-	cufftPlan2d(ifft, Ncol, Nrow, CUFFT_C2R);
+	// cufftPlan2d(fft, Ncol, Nrow, CUFFT_R2C);
+	// cufftPlan2d(ifft, Ncol, Nrow, CUFFT_C2R);
+	cufftResult result;
+
+    // Create FFT plan (Real to Complex)
+    result = cufftPlan2d(fft, Ncol, Nrow, CUFFT_R2C);
+    if (result != CUFFT_SUCCESS) {
+        printf("CUFFT Plan Creation Failed for FFT (R2C) with error code %d\n", result);
+        return;
+    }
+
+    // Create Inverse FFT plan (Complex to Real)
+    result = cufftPlan2d(ifft, Ncol, Nrow, CUFFT_C2R);
+    if (result != CUFFT_SUCCESS) {
+        printf("CUFFT Plan Creation Failed for IFFT (C2R) with error code %d\n", result);
+        return;
+    }
+
+    printf("CUFFT Plans created successfully: R2C and C2R\n");
 
 }
 
@@ -27,8 +44,28 @@ void setCudaFFT(int Nrow, int Ncol, cufftHandle *fft, cufftHandle *ifft) {
 
 void run_FFT(cufftHandle  * plan, cufftReal *in_data, cufftComplex *out_data) {
 	cufftResult flag = 	cufftExecR2C(*plan, in_data, out_data);
-	if (CUFFT_SUCCESS != flag) 
-		printf("2D: cufftExecR2C fails\n");
+	// if (CUFFT_SUCCESS != flag) 
+	// 	printf("2D: cufftExecR2C fails\n");
+	if (flag != CUFFT_SUCCESS) {
+        printf("2D: cufftExecR2C fails with error code %d\n", flag);
+        switch (flag) {
+            case CUFFT_INVALID_PLAN:
+                printf("Error: Invalid FFT plan\n");
+                break;
+            case CUFFT_ALLOC_FAILED:
+                printf("Error: Memory allocation failed\n");
+                break;
+            case CUFFT_INVALID_TYPE:
+                printf("Error: Invalid input/output data type\n");
+                break;
+            case CUFFT_EXEC_FAILED:
+                printf("Error: Execution failed\n");
+                break;
+            default:
+                printf("Error: Unknown error\n");
+                break;
+        }
+    }
 }
 
 
