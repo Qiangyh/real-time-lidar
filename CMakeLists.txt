@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION "3.19")
 project(real-time-lidar)
 
 # Enable CUDA language support
-find_package(CUDA 11.6 REQUIRED)
+find_package(CUDA 12.6 REQUIRED)
 enable_language(CUDA)
 include_directories(${CUDA_INCLUDE_DIRS})        
 
 
 # Find and include PCL
-find_package(PCL 1.8.1 REQUIRED)
+find_package(PCL 1.12.1 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
@@ -43,7 +43,7 @@ target_compile_options(real-time-lidar PRIVATE
 # Add -Xcompiler -fPIC for CUDA code to allow its passing to nvcc
 target_compile_options(real-time-lidar PRIVATE 
     $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler -fPIC>
-    $<$<COMPILE_LANGUAGE:CUDA>:-diag-suppress=20012,20013,20014,20015,177>
+    $<$<COMPILE_LANGUAGE:CUDA>:-diag-suppress=20012,20013,20014,20015,177,737>
 )
 
 
