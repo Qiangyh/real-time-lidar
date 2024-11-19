@@ -192,10 +192,15 @@ __global__ void convolutionRowGPU(
 	__shared__ float data[TILE_H * (TILE_W + KERNEL_RADIUS * 2)];
 
 	// global mem address of this thread
+	// const int gLoc = threadIdx.x +
+	// 	IMUL(blockIdx.x, blockDim.x) +
+	// 	IMUL(threadIdx.y, dataW) +
+	// 	IMUL(blockIdx.y, blockDim.y) * dataW;
 	const int gLoc = threadIdx.x +
-		IMUL(blockIdx.x, blockDim.x) +
-		IMUL(threadIdx.y, dataW) +
-		IMUL(blockIdx.y, blockDim.y) * dataW;
+		(blockIdx.x * blockDim.x) +
+		(threadIdx.y * dataW) +
+		(blockIdx.y * blockDim.y) * dataW;
+
 
 	// load cache (32x16 shared memory, 16x16 threads blocks)
 	// each threads loads two values from global memory into shared mem
@@ -203,9 +208,11 @@ __global__ void convolutionRowGPU(
 	int x;		// image based coordinate
 
 				// original image based coordinate
-	const int x0 = threadIdx.x + IMUL(blockIdx.x, blockDim.x);
+	// const int x0 = threadIdx.x + IMUL(blockIdx.x, blockDim.x);
+	const int x0 = threadIdx.x + blockIdx.x * blockDim.x;
 	const int shift = threadIdx.y * (TILE_W + KERNEL_RADIUS * 2);
-	const int y = threadIdx.y + IMUL(blockIdx.y, blockDim.y);
+	// const int y = threadIdx.y + IMUL(blockIdx.y, blockDim.y);
+	const int y = threadIdx.y + blockIdx.y * blockDim.y;
 
 	// finish out-of-scope threads
 	if (y >= dataH)
@@ -255,9 +262,9 @@ __global__ void convolutionColGPU(
 
 	// global mem address of this thread
 	const int gLoc = threadIdx.x +
-		IMUL(blockIdx.x, blockDim.x) +
-		IMUL(threadIdx.y, dataW) +
-		IMUL(blockIdx.y, blockDim.y) * dataW;
+		blockIdx.x * blockDim.x +
+		threadIdx.y * dataW +
+		blockIdx.y * blockDim.y * dataW;
 
 	// load cache (32x16 shared memory, 16x16 threads blocks)
 	// each threads loads two values from global memory into shared mem
@@ -265,8 +272,8 @@ __global__ void convolutionColGPU(
 	int y;		// image based coordinate
 
 				// original image based coordinate
-	const int y0 = threadIdx.y + IMUL(blockIdx.y, blockDim.y);
-	const int x = threadIdx.x + IMUL(blockIdx.x, blockDim.x);
+	const int y0 = threadIdx.y + blockIdx.y * blockDim.y;
+	const int x = threadIdx.x + blockIdx.x * blockDim.x;
 	const int shift = threadIdx.y * (TILE_W);
 
 	// finish out-of-scope threads
@@ -276,17 +283,17 @@ __global__ void convolutionColGPU(
 	// case1: upper
 	y = y0 - KERNEL_RADIUS;
 	if (y < 0)
-		data[threadIdx.x + shift] = d_Data[gLoc - IMUL(dataW, KERNEL_RADIUS-dataH)];
+		data[threadIdx.x + shift] = d_Data[gLoc - dataW * KERNEL_RADIUS-dataH];
 	else
-		data[threadIdx.x + shift] = d_Data[gLoc - IMUL(dataW, KERNEL_RADIUS)];
+		data[threadIdx.x + shift] = d_Data[gLoc - dataW * KERNEL_RADIUS];
 
 	// case2: lower
 	y = y0 + KERNEL_RADIUS;
-	const int shift1 = shift + IMUL(blockDim.y, TILE_W);
+	const int shift1 = shift + blockDim.y * TILE_W;
 	if (y >= dataH )
-		data[threadIdx.x + shift1] = d_Data[gLoc + IMUL(dataW, KERNEL_RADIUS-dataH)];
+		data[threadIdx.x + shift1] = d_Data[gLoc + dataW * KERNEL_RADIUS-dataH];
 	else
-		data[threadIdx.x + shift1] = d_Data[gLoc + IMUL(dataW, KERNEL_RADIUS)];
+		data[threadIdx.x + shift1] = d_Data[gLoc + dataW * KERNEL_RADIUS];
 	
 	__syncthreads();
 

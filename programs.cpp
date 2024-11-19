@@ -102,8 +102,9 @@ void run_single(void)
 
 		while (1)
 		{
-			algo.loadParameters(data, false); // !data.SBR_available());
+			algo.loadParameters(data, true); // !data.SBR_available());
 			/************* Show results *************/
+			std::cout << data.getFrameNumber() << std::endl;
 			bool plot = (data.getFrameNumber() == 1); // askYesNo("Do you want to plot results? This will significantly degrade the execution performance");
 			bool binary = true;
 			bool plot_likelihood = false;
@@ -111,12 +112,12 @@ void run_single(void)
 
 			std::vector<float> reflect, background, points, normals, likelihood;
 			std::vector<int> points_per_pix;
-			for (int i = 0; i < data.getFrameNumber(); i++)
+			for (int i = 0; i < data.getFrameNumber(); i++) // 循环遍历数据帧
 			{
 
 				// std::vector<float> hyperparam = logspace(float(.01), float(100), 20);
 
-				if (data.SBR_available())
+				if (data.SBR_available()) // 超参数设置
 				{
 					algo.defaultHyperParameters(data.getMeanPPP(i), data.getSBR(i));
 					performance.push_back_copy();
@@ -125,8 +126,8 @@ void run_single(void)
 
 				// for (int l = 0; l < hyperparam.size(); l++) {
 
-				if (data.getFrameNumber() == 1)
-				{ // GPU Warm UP
+				if (data.getFrameNumber() == 1) // GPU预热
+				{								// GPU Warm UP
 					for (int j = 0; j < 2; j++)
 						algo.run_frame(i, false);
 				}

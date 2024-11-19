@@ -9,6 +9,7 @@
 #include "gradient.h"
 #include <chrono>  // for high_resolution_clock
 #include <boost/filesystem.hpp>
+#include <string>
 
 LidarReconstruction::~LidarReconstruction(void) {
 	/************* Free Allocated Memory *************/
@@ -304,7 +305,7 @@ bool LidarReconstruction::loadParameters(LidarData &data, bool manual, int alg) 
 	allocateGPUMemory(data);
 	//根据数据特性和需求，为 GPU 上的 LiDAR 数据结构分配并初始化内存，同时配置 CUDA 网格和线程块
 	// Set Laplacian Filter
-	setBackgroundFilter();
+	setBackgroundFilter(); // 初始化一个背景滤波器内核（h_Kernel），并将其通过 GPU 进行处理。
 	return true;
 };
 
@@ -505,6 +506,7 @@ void LidarReconstruction::saveHyperParameters(std::string filename) {
 void LidarReconstruction::allocateGPUMemory(LidarData &data, bool print_info) {
 
 	int cloud_size = height_cloud * width_cloud;
+	std::cout << height_cloud << ";" << width_cloud << std::endl;
 	int lidar_size = Nrow * Ncol;
 	/************* Memory conf *************/
 	// Allocate GPU buffers 

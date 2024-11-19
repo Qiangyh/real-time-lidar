@@ -796,7 +796,7 @@ __global__ void prox_bkg_kernel(float *in_points, float * in_reflect, int *in_po
 	if (delta_bkg == delta_bkg) 
 		bkg -= step_size_bkg * delta_bkg;
 	else
-		printf("Error bkg update \n", exp_bkg);
+		printf("Error bkg update: %f \n", exp_bkg);
 
 	
 
@@ -910,7 +910,7 @@ __global__ void prox_MSbkg_kernel(float *in_points, float * in_reflect, int *in_
 	if (delta_bkg == delta_bkg)
 		bkg -= step_size_bkg * delta_bkg;
 	else
-		printf("Error bkg update \n", exp_bkg);
+		printf("Error bkg update: %f \n", exp_bkg);
 
 
 

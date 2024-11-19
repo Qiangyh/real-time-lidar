@@ -1273,7 +1273,8 @@ __global__ void denseLogMatchedFilterPeaks(float *points, float * reflect, int *
 		bool flag = true;
 		float mean = 0;
 		int t = 0;
-		for (int j = -sigma; j+k>=0, j+k<T/downsample, j < sigma; j++) {
+		// for (int j = -sigma; j+k>=0, j+k<T/downsample, j < sigma; j++) {
+		for (int j = -sigma; j + k >= 0 && j + k < T / downsample && j < sigma; j++) {
 			mean += cand_filt[k+j];
 			t++;
 		}
