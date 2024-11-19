@@ -797,6 +797,7 @@ __global__ void prox_bkg_kernel(float *in_points, float * in_reflect, int *in_po
 		bkg -= step_size_bkg * delta_bkg;
 	else
 		printf("Error bkg update: %f \n", exp_bkg);
+		printf("Error bkg update: %f\n", exp_bkg);
 
 	
 

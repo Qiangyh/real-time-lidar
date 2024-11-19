@@ -52,7 +52,8 @@ public:
 			background_image = pcl::visualization::ImageViewer::Ptr(new pcl::visualization::ImageViewer("Background levels"));
 			points_image = pcl::visualization::ImageViewer::Ptr(new pcl::visualization::ImageViewer("Points per pixel"));
 			color_cloud = ColorCloudType::Ptr(new ColorCloudType);
-			viewer = pcl::visualization::PCLVisualizer::Ptr(new pcl::visualization::PCLVisualizer("3D Viewer"));
+			// viewer = pcl::visualization::PCLVisualizer::Ptr(new pcl::visualization::PCLVisualizer("3D Viewer"));
+			viewer = std::make_shared<pcl::visualization::PCLVisualizer>("3D Viewer");
 			viewer->addCoordinateSystem(1.0);
 			viewer->initCameraParameters();
 			viewer->registerKeyboardCallback(&visualization::keyboard_callback, *this);
@@ -123,7 +124,7 @@ protected:
 	pcl::visualization::ImageViewer::Ptr points_image;
 	bool first_frame;
 	std::string foldername;
-	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+	std::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
 	// boost::thread thr;
 	void spinAll(void);
 	rgb map_reflectivity_to_color(std::vector<float> &r, float lim_max, float lim_min);

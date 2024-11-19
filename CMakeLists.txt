@@ -9,7 +9,7 @@ include_directories(${CUDA_INCLUDE_DIRS})
 
 
 # Find and include PCL
-find_package(PCL 1.8.1 REQUIRED)
+find_package(PCL 1.12.1 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
