@@ -129,7 +129,9 @@ __global__ void max_reflect_kernel(const float * in_reflect, float *out_reflect,
 __global__ void APSS_with_normals_resample(float *in_points, float * in_normals, float* in_reflect, int *in_points_per_pix,
 	float *out_points, float *out_normals, float * out_reflect, int *out_points_per_pix,
 	const int T, const int Nrow, const int Ncol, const int pixhr, const float proportion, const float scale_ratio, const int impulse_len, const int L) {
+	// 对具有法线和反射率数据的点云进行加权移动最小二乘(APSS)采样和重采样
 
+	// === 初始化共享内存与线程块坐标 ===
 	extern __shared__ int smem[];
 	int tx = threadIdx.x;
 	int ty = threadIdx.y;
@@ -138,16 +140,17 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 	int blockX = int(blockDim.x);
 	int blockY = int(blockDim.y);
 
+	 // 设置共享内存参数
 	int grid_apron = pixhr;
 	int grid_stride = (blockX + 2 * grid_apron);
 	int grid_size = grid_stride * grid_stride;
 
-	int *smem_points_per_pix = (int *)smem;
-	int *smem_points_index = (int *)&smem_points_per_pix[grid_size];
-	gpwnr *smem_points = (gpwnr *)&smem_points_index[grid_size];
+	// 将共享内存分为不同用途的区域
+	int *smem_points_per_pix = (int *)smem; // 每个像素的点数量
+	int *smem_points_index = (int *)&smem_points_per_pix[grid_size]; // 索引映射
+	gpwnr *smem_points = (gpwnr *)&smem_points_index[grid_size]; // 点数据
 
-	//load shared memory
-
+	// === 加载共享内存数据 (处理周围像素的点数据) ===
 	for (int sx = tx - blockX; sx < blockX + grid_apron; sx += blockX) {
 		if (sx >= -grid_apron) {
 			for (int sy = ty - blockY; sy < blockY + grid_apron; sy += blockY) {
@@ -156,7 +159,7 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 					int ny = py - ty + sy;
 					int d_mem = (sx + grid_apron) + (sy + grid_apron)*grid_stride;
 
-					//mirror Lidar cube
+					// 处理边界反射（镜像处理）
 					if (nx >= Nrow)
 						nx = 2 * Nrow - (nx + 2);
 					else if (nx < 0)
@@ -167,6 +170,7 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 					else if (ny < 0)
 						ny = -ny;
 
+					// 从全局内存加载点数量到共享内存
 					smem_points_per_pix[d_mem] = in_points_per_pix[get_pixel_idx(nx,ny,Nrow,Ncol)];
 
 					//printf("sx:%d, sy:%d, d_mem: %d, value:%d \n",sx,sy, d_mem, smem_points_per_pix[d_mem] );
@@ -176,6 +180,7 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 	}
 	__syncthreads();
 
+	// === 构建共享内存中的点索引映射表 ===
 	if (tx == 0 && ty == 0) {
 		int prev = 0;
 		for (int yy = 0; yy < grid_stride; yy++) {
@@ -188,6 +193,7 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 	}
 	__syncthreads();
 
+	// === 加载像素点的具体数据（坐标、法线、反射率） ===
 	for (int sy = ty - blockY; sy < blockY + grid_apron; sy += blockY) {
 		if (sy >= -grid_apron) {
 			for (int sx = tx - blockX; sx < blockX + grid_apron; sx += blockX) {
@@ -229,7 +235,7 @@ __global__ void APSS_with_normals_resample(float *in_points, float * in_normals,
 
 	__syncthreads();
 
-
+	// === 检查线程是否在有效范围内 ===
 	if (px >= Nrow || py >= Ncol) //finish out-of-scope threads
 		return;
 
