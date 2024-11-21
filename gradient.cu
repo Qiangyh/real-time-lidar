@@ -1,9 +1,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "device_functions.h"
 #include "read_lidar.h"
 #include "Point.h"
-#include "math_functions.h"
 
 /* one thread per pixel or one thread per point*/
 struct pos {

@@ -4,7 +4,7 @@
 #include <pcl/visualization/image_viewer.h>
 #include <pcl/visualization/pcl_plotter.h>
 #include <boost/filesystem.hpp>
-
+#include <boost/make_shared.hpp>
 
 /*
 struct MyPointType {
@@ -25,12 +25,13 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(MyPointType,           // here we assume a XYZ
 (float[MAX_WAVELENGTHS], r, r)
 )*/
 
-class visualization {
+class visualization
+{
 
 public:
-
 	typedef pcl::PointXYZINormal MyPointType;
-	typedef struct  {
+	typedef struct
+	{
 		unsigned char r;
 		unsigned char g;
 		unsigned char b;
@@ -39,18 +40,21 @@ public:
 	typedef pcl::PointCloud<MyPointType> MyCloudType;
 	typedef pcl::PointCloud<pcl::PointXYZRGB> ColorCloudType;
 
-	void keyboard_callback(const pcl::visualization::KeyboardEvent &event, void* viewer_void);
+	void keyboard_callback(const pcl::visualization::KeyboardEvent &event, void *viewer_void);
 
-	visualization(bool render = false, bool plot_likelihood = false, std::string filename = "") {
+	visualization(bool render = false, bool plot_likelihood = false, std::string filename = "")
+	{
 		data_available = false;
 		plot_lhood = plot_likelihood;
 		if (plot_lhood)
 			plotter = new pcl::visualization::PCLPlotter("My plotter");
-		if (render) {
+		if (render)
+		{
 			background_image = pcl::visualization::ImageViewer::Ptr(new pcl::visualization::ImageViewer("Background levels"));
 			points_image = pcl::visualization::ImageViewer::Ptr(new pcl::visualization::ImageViewer("Points per pixel"));
 			color_cloud = ColorCloudType::Ptr(new ColorCloudType);
-			viewer = pcl::visualization::PCLVisualizer::Ptr(new pcl::visualization::PCLVisualizer("3D Viewer"));
+			// viewer = pcl::visualization::PCLVisualizer::Ptr(new pcl::visualization::PCLVisualizer("3D Viewer"));
+			viewer = boost::make_shared<pcl::visualization::PCLVisualizer>("3D Viewer");
 			viewer->addCoordinateSystem(1.0);
 			viewer->initCameraParameters();
 			viewer->registerKeyboardCallback(&visualization::keyboard_callback, *this);
@@ -66,10 +70,9 @@ public:
 			till_the_end = false;
 		}
 
-
 		namespace fs = boost::filesystem;
 
-		fs::path path(std::string("output_")+ filename);
+		fs::path path(std::string("output_") + filename);
 
 		foldername = path.string();
 		foldername.append("\\");
@@ -78,12 +81,14 @@ public:
 		this->render = render;
 	};
 
-	~visualization() {
+	~visualization()
+	{
 
+		if (render)
+		{
 
-		if (render) {
-
-			while (!viewer->wasStopped()) {
+			while (!viewer->wasStopped())
+			{
 				spinAll();
 			}
 
@@ -95,42 +100,41 @@ public:
 		}
 	};
 
-	int loadPointCloud(std::vector<float> & points, std::vector<float> & normals, std::vector<float> &  reflect, std::vector<int> &  in_points_per_pix,
-		float scale_ratio, int height, int width, std::vector<float> &  background, int Nrow, int Ncol, int L, std::vector<float> & likelihood);
+	int loadPointCloud(std::vector<float> &points, std::vector<float> &normals, std::vector<float> &reflect, std::vector<int> &in_points_per_pix,
+					   float scale_ratio, int height, int width, std::vector<float> &background, int Nrow, int Ncol, int L, std::vector<float> &likelihood);
 
-	void savePly(std::string & filename);
-	void savePointsPerPix(std::string & filename, bool binary=false);
-	void saveBackground(std::string & filename, bool binary=false);
-	void saveLikelihood(std::string & filename, std::vector<float> & likelihood);
+	void savePly(std::string &filename);
+	void savePointsPerPix(std::string &filename, bool binary = false);
+	void saveBackground(std::string &filename, bool binary = false);
+	void saveLikelihood(std::string &filename, std::vector<float> &likelihood);
 	rgb colormap(unsigned char v);
 	std::string getFolderName(void) { return foldername; };
-	
+
 protected:
 	bool data_available, render;
 	std::vector<float> bkg;
 	std::vector<uint16_t> points_per_pix;
 	ColorCloudType::Ptr color_cloud;
 	std::vector<rgb> img_bkg, img_points_per_pix;
-	std::vector< MyCloudType::Ptr, Eigen::aligned_allocator <MyCloudType::Ptr> > clouds;
+	std::vector<MyCloudType::Ptr, Eigen::aligned_allocator<MyCloudType::Ptr>> clouds;
 
-	void plotLikelihood(std::vector<float> & data);
-	//defining a plotter
-	pcl::visualization::PCLPlotter * plotter;
+	void plotLikelihood(std::vector<float> &data);
+	// defining a plotter
+	pcl::visualization::PCLPlotter *plotter;
 	pcl::visualization::ImageViewer::Ptr background_image;
 	pcl::visualization::ImageViewer::Ptr points_image;
 	bool first_frame;
 	std::string foldername;
 	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
-	//boost::thread thr;
+	// boost::thread thr;
 	void spinAll(void);
-	rgb map_reflectivity_to_color(std::vector<float> & r, float lim_max, float lim_min);
+	rgb map_reflectivity_to_color(std::vector<float> &r, float lim_max, float lim_min);
 
 	void showPointCloud(void);
 
-	//static boost::mutex mutex;
+	// static boost::mutex mutex;
 	bool finished_vis, till_the_end, plot_lhood;
 	int Nrow, Ncol;
 	int width_cloud, height_cloud;
 	int wavelengths;
 };
-

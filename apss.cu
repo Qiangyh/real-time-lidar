@@ -1,9 +1,8 @@
 #define EIGEN_DEFAULT_DENSE_INDEX_TYPE int
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "device_functions.h"
 #include "read_lidar.h"
-#include "Eigen\Core"
+#include "Eigen/Core"
 #include "Point.h"
 #include <Ponca/Fitting>
 
@@ -745,7 +744,7 @@ __global__ void threshold_points(float *in_points, float * in_normals, float *in
 	if (number_of_points_in > 0) {
 		float r[MAX_WAVELENGTHS];
 		int d_out =pixel_idx;
-		for (int z = 0, int d = pixel_idx; z < number_of_points_in; d += (Nrow*Ncol), z++) {
+		for (int z = 0, d = pixel_idx; z < number_of_points_in; d += (Nrow*Ncol), z++) {
 			
 			//printf("r: %.5f /t", r);
 			float max_r = 0;
@@ -794,7 +793,7 @@ __global__ void merge_points(float *in_points, float * in_normals, float *in_ref
 
 	if (number_of_points_in > 0) {
 
-		for (int z = 0, int d = x + y * Nrow; z < number_of_points_in; d+=(Nrow*Ncol), z++) {
+		for (int z = 0, d = x + y * Nrow; z < number_of_points_in; d+=(Nrow*Ncol), z++) {
 			pin[z].pos = in_points[d];
 			pin[z].r = in_reflect[d];
 			pin[z].norm[0] = in_normals[3 * d];
@@ -841,7 +840,7 @@ __global__ void merge_points(float *in_points, float * in_normals, float *in_ref
 
 	// save stuff
 	in_points_per_pix[x + y * Nrow] = number_of_points_out;
-	for (int z = 0, int d = x + y * Nrow; z < number_of_points_in; d += (Nrow*Ncol), z++) {
+	for (int z = 0, d = x + y * Nrow; z < number_of_points_in; d += (Nrow*Ncol), z++) {
 		in_points[d] = pout[z].pos ;
 		in_reflect[d] = pout[z].r;
 		in_normals[3*d] = pout[z].norm[0];

@@ -2,7 +2,6 @@
 #include "device_launch_parameters.h"
 #include "read_lidar.h"
 #include "Point.h"
-#include "math_functions.h"
 
 #define MIN_PHOTONS_PER_PEAK 3
 
@@ -1239,7 +1238,7 @@ __global__ void denseLogMatchedFilterPeaks(float *points, float * reflect, int *
 	float cand_ref[MAX_ACTIVE_BINS_PER_PIXEL];
 	float cand_filt[MAX_ACTIVE_BINS_PER_PIXEL];
 
-	for (int i = 0, int k ; i < T; i += downsample, k++) {
+	for (int i = 0, k ; i < T; i += downsample, k++) {
 
 		float filt = 0;
 		int ref = 0;
